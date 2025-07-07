@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implementation Guide for the Core & Spoke Naming Model</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Agency Architect Palette -->
+    <!-- Application Structure Plan: The SPA has been refactored into a focused implementation guide for the "Core & Spoke" model. The top-level navigation is now: Intro, Principles, The Core & Spoke Model, and Playbook. The "Model Explorer" has been removed. A new, comprehensive section, "The Core & Spoke Model," details the architecture for both custom values and assets (Funnels, Workflows, etc.), a key user requirement. This structure provides a linear, step-by-step learning path, moving from foundational concepts to detailed architectural rules and finally to actionable implementation strategies. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: The Core & Spoke model for custom values and assets.
+          - Goal: Inform & Instruct.
+          - Viz/Presentation: Dedicated sections with clear structural diagrams using styled `<code>` blocks. Interactive "Value Builders" for both Core and Spoke custom values are retained to provide a hands-on learning experience. A new section on Asset Naming uses clear tables and examples.
+          - Interaction: Users can build sample custom value names to understand the logic. The playbook section uses an accordion to reveal detailed strategies.
+          - Justification: This approach breaks down a complex architectural standard into digestible parts. The interactive builders make abstract rules tangible. The clear typographic hierarchy and layout for asset naming make it easy to reference.
+        - Library/Method: All interactions use vanilla JavaScript. All diagrams and layouts use structured HTML/CSS with Tailwind. Chart.js is no longer needed and has been removed.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FA;
+            color: #343A40;
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #4F46E5;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .principle-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .principle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .code-block {
+            background-color: #E9ECEF;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            color: #212529;
+            border: 1px solid #DEE2E6;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">Architecting for Scale</h1>
+            <p class="mt-2 text-lg text-gray-600">An Implementation Guide for the Core & Spoke Naming Convention</p>
+        </header>
+
+        <nav class="flex justify-center border-b border-gray-200 mb-8">
+            <button data-target="intro" class="nav-button active text-gray-600 hover:text-gray-900 font-medium py-3 px-4 text-sm md:text-base">Introduction</button>
+            <button data-target="principles" class="nav-button text-gray-600 hover:text-gray-900 font-medium py-3 px-4 text-sm md:text-base">Foundational Principles</button>
+            <button data-target="model" class="nav-button text-gray-600 hover:text-gray-900 font-medium py-3 px-4 text-sm md:text-base">The Core & Spoke Model</button>
+            <button data-target="playbook" class="nav-button text-gray-600 hover:text-gray-900 font-medium py-3 px-4 text-sm md:text-base">Implementation Playbook</button>
+        </nav>
+
+        <main>
+            <!-- Introduction Section -->
+            <section id="intro" class="content-section active">
+                <div class="bg-white p-8 rounded-xl shadow-sm prose max-w-none">
+                    <h2>From Blueprint to Build: Implementing Your Naming Architecture</h2>
+                    <p>Your agency has selected the <strong>Hybrid "Core & Spoke" model</strong> as its architectural foundation—an excellent choice for balancing scalability with practicality. The next step is to move from theory to execution. This guide has been updated to serve as your official implementation blueprint, providing not just the rules for custom values, but a comprehensive framework for naming all GoHighLevel assets, including funnels, forms, workflows, and their containing folders.</p>
+                    <p>A consistent naming convention across your entire GoHighLevel environment is the key to unlocking true operational efficiency. It makes your systems self-documenting, simplifies team collaboration, and enables powerful automation. Use this guide to build a robust, scalable, and manageable foundation for all your client services.</p>
+                </div>
+            </section>
+
+            <!-- Principles Section -->
+            <section id="principles" class="content-section">
+                <div class="bg-white p-8 rounded-xl shadow-sm mb-8">
+                    <h2 class="text-2xl font-bold mb-2">Foundational Principles of a Robust Naming System</h2>
+                    <p class="text-gray-600">These core principles govern all naming decisions within GoHighLevel. Understanding them is the first step to successfully implementing the Core & Spoke model. Click each card to learn more.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="principle-card bg-white p-6 rounded-xl shadow-sm cursor-pointer" onclick="showPrinciple('immutable')">
+                        <h3 class="font-bold text-lg text-indigo-700">The Immutable Key</h3>
+                        <p class="text-sm text-gray-600 mt-2">A value's machine-readable `Key` is permanent. Your initial naming decision is a final architectural commitment.</p>
+                    </div>
+                    <div class="principle-card bg-white p-6 rounded-xl shadow-sm cursor-pointer" onclick="showPrinciple('readability')">
+                        <h3 class="font-bold text-lg text-indigo-700">Human vs. Machine</h3>
+                        <p class="text-sm text-gray-600 mt-2">A great system serves two masters: human readability for your team and machine parsability for automations.</p>
+                    </div>
+                    <div class="principle-card bg-white p-6 rounded-xl shadow-sm cursor-pointer" onclick="showPrinciple('folders')">
+                        <h3 class="font-bold text-lg text-indigo-700">The Folder-First Approach</h3>
+                        <p class="text-sm text-gray-600 mt-2">Design your naming convention and folder structure in tandem to create a system of enforced organization.</p>
+                    </div>
+                     <div class="principle-card bg-white p-6 rounded-xl shadow-sm cursor-pointer" onclick="showPrinciple('lifecycle')">
+                        <h3 class="font-bold text-lg text-indigo-700">The Snapshot Lifecycle</h3>
+                        <p class="text-sm text-gray-600 mt-2">Differentiate between values needing client-specific data (`Core`) and pre-built `Spoke` module values.</p>
+                    </div>
+                </div>
+                <div id="principle-detail" class="mt-6 bg-white p-8 rounded-xl shadow-sm prose max-w-none hidden"></div>
+            </section>
+
+            <!-- Model Section -->
+            <section id="model" class="content-section">
+                <div class="bg-white p-8 rounded-xl shadow-sm">
+                    <h2 class="text-2xl font-bold mb-2">The Core & Spoke Architecture</h2>
+                    <p class="text-gray-600 mb-6">This model segments all assets into two categories: "Core" for global, brand-level items, and "Spoke" for module-specific components. This separation of concerns is the key to a clean, scalable, and manageable GoHighLevel environment.</p>
+
+                    <div class="space-y-8">
+                        <!-- Custom Values Naming -->
+                        <div>
+                            <h3 class="text-xl font-bold mb-4 border-b pb-2">1. Custom Value Naming Convention</h3>
+                            <div class="grid lg:grid-cols-2 gap-8">
+                                <!-- Core Values -->
+                                <div class="bg-gray-50 p-6 rounded-lg border">
+                                    <h4 class="font-bold text-lg text-indigo-800">Core Values (Global)</h4>
+                                    <p class="text-sm text-gray-600 mt-1 mb-3">For global brand assets used across all modules. Follows a Functional Prefix Convention.</p>
+                                    <p class="text-sm font-semibold">Structure:</p>
+                                    <div class="code-block text-sm mb-4">Core_Type_Descriptor</div>
+                                    <h5 class="font-semibold mb-2 text-sm">Live Builder:</h5>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <label class="text-xs font-medium">Type</label>
+                                            <select id="core-type" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                                <option>Brand</option><option>Link</option><option>URL</option><option>Color</option><option>Phone</option><option>ID</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="text-xs font-medium">Descriptor</label>
+                                            <input type="text" id="core-descriptor" value="Name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                        <div class="pt-2">
+                                            <p class="text-xs font-medium">Generated Value:</p>
+                                            <div class="mt-1 p-3 bg-gray-200 rounded-md text-sm font-mono break-all" id="core-output"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Spoke Values -->
+                                <div class="bg-gray-50 p-6 rounded-lg border">
+                                    <h4 class="font-bold text-lg text-indigo-800">Spoke Values (Module-Specific)</h4>
+                                    <p class="text-sm text-gray-600 mt-1 mb-3">For all values specific to a single service module. Follows a Hierarchical Namespace Convention.</p>
+                                    <p class="text-sm font-semibold">Structure:</p>
+                                    <div class="code-block text-sm mb-4">Spoke_Module_Asset_Element_Attribute</div>
+                                    <h5 class="font-semibold mb-2 text-sm">Live Builder:</h5>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <label class="text-xs font-medium">Module</label>
+                                            <select id="spoke-module" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                                <option>RepMan</option><option>Onboarding</option><option>Reactivation</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="text-xs font-medium">Asset_Element_Attribute</label>
+                                            <input type="text" id="spoke-descriptor" value="Funnel_ReviewPage_Headline" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                        <div class="pt-2">
+                                            <p class="text-xs font-medium">Generated Value:</p>
+                                            <div class="mt-1 p-3 bg-gray-200 rounded-md text-sm font-mono break-all" id="spoke-output"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Asset Naming -->
+                        <div>
+                            <h3 class="text-xl font-bold mb-4 border-b pb-2">2. Asset & Folder Naming Architecture</h3>
+                            <p class="text-gray-600 mb-4">The Core & Spoke logic extends to all assets. Folders are used to group assets by their Spoke (module), while individual asset names use a prefix to identify their module. "Core" assets are rare but can be housed in a `[Core]` folder if needed.</p>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="bg-gray-100">
+                                        <tr>
+                                            <th class="p-3 font-semibold">Asset Type</th>
+                                            <th class="p-3 font-semibold">Folder Name Structure</th>
+                                            <th class="p-3 font-semibold">Asset Name Structure</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b">
+                                            <td class="p-3 font-medium">Workflows</td>
+                                            <td class="p-3"><div class="code-block">[Spoke] - Reputation Management</div></td>
+                                            <td class="p-3"><div class="code-block">[RepMan] - Review Request Sequence</div></td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-3 font-medium">Funnels / Websites</td>
+                                            <td class="p-3"><div class="code-block">[Spoke] - New Client Onboarding</div></td>
+                                            <td class="p-3"><div class="code-block">[Onboarding] - Intake Funnel</div></td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-3 font-medium">Forms / Surveys</td>
+                                            <td class="p-3"><div class="code-block">[Spoke] - Reactivation Campaign</div></td>
+                                            <td class="p-3"><div class="code-block">[Reactivation] - Interest Survey</div></td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-3 font-medium">Email / SMS Templates</td>
+                                            <td class="p-3"><div class="code-block">[Spoke] - Reputation Management</div></td>
+                                            <td class="p-3"><div class="code-block">[RepMan] - Positive Review Request Email</div></td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-3 font-medium">Calendars</td>
+                                            <td class="p-3"><div class="code-block">[Core] - General Calendars</div></td>
+                                            <td class="p-3"><div class="code-block">[Core] - 30-Min Discovery Call</div></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                             <p class="text-xs text-gray-500 mt-3"><strong>Note:</strong> The `[Module]` prefix on asset names uses the same short code as the custom values (e.g., `RepMan`, `Onboarding`). The folder name uses the full module name for clarity.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Playbook Section -->
+            <section id="playbook" class="content-section">
+                <div class="bg-white p-8 rounded-xl shadow-sm">
+                    <h2 class="text-2xl font-bold mb-2">Strategic Implementation Playbook</h2>
+                    <p class="text-gray-600 mb-6">A naming convention is only as effective as the processes built around it. Use this playbook to leverage your chosen structure, automate setup, and empower your team.</p>
+
+                    <div class="space-y-4" id="accordion">
+                         <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="accordion-header w-full text-left p-4 bg-gray-50 hover:bg-gray-100 font-semibold flex justify-between items-center">
+                                <span>Setting Up Your Airtable Naming Dictionary</span>
+                                <span class="accordion-icon transform rotate-0 transition-transform">▼</span>
+                            </button>
+                            <div class="accordion-content p-4 border-t hidden prose max-w-none">
+                                <p>Your Airtable base is the single source of truth for your agency's information architecture. It prevents "value sprawl" and ensures consistency. Create two primary tables:</p>
+                                <p><strong>1. Custom Values Table:</strong></p>
+                                <ul>
+                                    <li><strong>CustomValueKey (Primary Field):</strong> The full, final key (e.g., <code>Core_Brand_Name</code> or <code>Spoke_RepMan_Funnel_Headline</code>).</li>
+                                    <li><strong>Category:</strong> Single Select field with options: `Core`, `Spoke`.</li>
+                                    <li><strong>Module:</strong> Linked record to a "Modules" table (e.g., Reputation Management, Onboarding). Only required if Category is `Spoke`.</li>
+                                    <li><strong>Purpose/Description:</strong> A plain-English explanation.</li>
+                                    <li><strong>Data Type:</strong> Single Select field (e.g., Text, URL, Color Hex).</li>
+                                    <li><strong>Status:</strong> Single Select field (e.g., Active, Deprecated).</li>
+                                </ul>
+                                <p><strong>2. Asset Naming Table:</strong></p>
+                                <ul>
+                                    <li><strong>Asset Name (Primary Field):</strong> The full asset name (e.g., <code>[RepMan] - Review Request Funnel</code>).</li>
+                                    <li><strong>Asset Type:</strong> Single Select field (e.g., Workflow, Funnel, Form).</li>
+                                    <li><strong>Module:</strong> Linked record to the "Modules" table.</li>
+                                    <li><strong>Folder Name:</strong> Formula field that generates the correct folder name (e.g., `"[Spoke] - " & {Module}`).</li>
+                                    <li><strong>Purpose/Description:</strong> Explain what the asset does.</li>
+                                </ul>
+                                <p>Mandate that all new values and assets are defined and approved in Airtable <em>before</em> being created in GoHighLevel.</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="accordion-header w-full text-left p-4 bg-gray-50 hover:bg-gray-100 font-semibold flex justify-between items-center">
+                                <span>The "Snapshot Onboarding" Workflow</span>
+                                <span class="accordion-icon transform rotate-0 transition-transform">▼</span>
+                            </button>
+                            <div class="accordion-content p-4 border-t hidden prose max-w-none">
+                                <p>This strategy automates the manual configuration of `Core` custom values after a snapshot deployment.</p>
+                                <ol>
+                                    <li><b>Trigger:</b> Use a tag like "New Account - Needs Setup" to start an onboarding workflow.</li>
+                                    <li><b>Internal Form:</b> The workflow sends a link to an internal form where your team enters all client-specific data. Each field corresponds to a `Core_` prefixed custom value.</li>
+                                    <li><b>Update Workflow:</b> Form submission triggers a second workflow that uses "Update Custom Value" actions to populate all `Core_` values from the form data.</li>
+                                    <li><b>Completion:</b> The workflow removes the setup tag, adds a "Client Setup Complete" tag, and notifies the team.</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="accordion-item border rounded-lg overflow-hidden">
+                            <button class="accordion-header w-full text-left p-4 bg-gray-50 hover:bg-gray-100 font-semibold flex justify-between items-center">
+                                <span>Advanced Update Strategies via API</span>
+                                <span class="accordion-icon transform rotate-0 transition-transform">▼</span>
+                            </button>
+                            <div class="accordion-content p-4 border-t hidden prose max-w-none">
+                                <p>Use external automation tools like <strong>Make.com</strong> or <strong>Zapier</strong> for bulk updates. Because every value has a predictable, immutable key (e.g., `spoke_repman_workflow_initialsmstext`), you can build a reliable script to find and update a specific custom value across hundreds of accounts by its key—a level of control impossible without a strict naming convention.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const navButtons = document.querySelectorAll('.nav-button');
+    const contentSections = document.querySelectorAll('.content-section');
+    
+    const principleDetailsContainer = document.getElementById('principle-detail');
+    
+    const principles = {
+        immutable: {
+            title: 'The Immutable Key — Your First Decision is Final',
+            content: `<p>The single most critical technical constraint is the relationship between a custom value's Name and its Key. When you create a value with a Name like "Review Link," GoHighLevel generates a permanent, machine-readable Key like <code>custom_values.review_link</code>. This Key is what's embedded in your assets.</p><p><strong>You can change the display Name later, but the underlying Key is immutable—it will never change.</strong></p><p>This transforms the initial naming act into a permanent architectural commitment. A poor choice introduces technical debt that requires manually creating a new value and replacing every instance of the old key, a time-consuming and error-prone process. Approach naming with the same foresight as designing a database schema.</p>`
+        },
+        readability: {
+            title: 'Human Readability vs. Machine Parsability — Serving Two Masters',
+            content: `<p>An effective naming convention must serve two distinct masters: the human team members who build and manage the system, and the machine processes that execute automations.</p><p>The best systems resolve this tension by adopting a hybrid structure that combines clear, descriptive words with a rigid syntax. Using a consistent separator (like an underscore) and avoiding spaces is key.</p><p>A name like <code>Spoke_RepMan_Funnel_ReviewPage_Headline</code> is a perfect balance. A human can immediately understand its context, and a machine can reliably parse it for automation. This turns your naming convention into self-documenting code.</p>`
+        },
+        folders: {
+            title: 'The Folder-First Approach — Reinforcing Structure',
+            content: `<p>While GoHighLevel allows you to organize assets into folders, using them reactively is inefficient. A far more powerful strategy is to design the naming convention and the folder structure in tandem, so each reinforces the other.</p><p>The folder structure should directly mirror the primary component of your naming convention. If your assets are for the "Reputation Management" module, they should live in a folder named <code>[Spoke] - Reputation Management</code>. This creates a system of "enforced organization" that is intuitive to navigate and audit.</p>`
+        },
+        lifecycle: {
+            title: 'The Snapshot Lifecycle — Differentiating Value Types',
+            content: `<p>When a snapshot is deployed, the custom value keys are transferred, but their values are often left blank for client-specific configuration. This creates a manual setup bottleneck.</p><p>The Core & Spoke model solves this by its very nature. <strong>Core values</strong> are your setup checklist; they are the client-specific data that MUST be populated on onboarding. <strong>Spoke values</strong> contain pre-built module logic or default content that is part of the system and rarely needs changing. This classification streamlines onboarding immensely.</p>`
+        }
+    };
+
+    function switchTab(targetId) {
+        contentSections.forEach(section => {
+            section.classList.remove('active');
+            if (section.id === targetId) {
+                section.classList.add('active');
+            }
+        });
+        navButtons.forEach(button => {
+            button.classList.remove('active');
+            if (button.dataset.target === targetId) {
+                button.classList.add('active');
+            }
+        });
+    }
+
+    navButtons.forEach(button => {
+        button.addEventListener('click', () => switchTab(button.dataset.target));
+    });
+
+    window.showPrinciple = function(key) {
+        const principle = principles[key];
+        principleDetailsContainer.innerHTML = `<h3 class="text-xl font-bold mb-4">${principle.title}</h3><div class="text-gray-700">${principle.content}</div>`;
+        principleDetailsContainer.classList.remove('hidden');
+    }
+
+    function attachBuilderListeners() {
+        const coreType = document.getElementById('core-type');
+        const coreDescriptor = document.getElementById('core-descriptor');
+        const coreOutput = document.getElementById('core-output');
+        
+        const spokeModule = document.getElementById('spoke-module');
+        const spokeDescriptor = document.getElementById('spoke-descriptor');
+        const spokeOutput = document.getElementById('spoke-output');
+
+        const updateCore = () => {
+            coreOutput.textContent = `Core_${coreType.value}_${coreDescriptor.value}`;
+        };
+        
+        const updateSpoke = () => {
+            spokeOutput.textContent = `Spoke_${spokeModule.value}_${spokeDescriptor.value}`;
+        };
+
+        coreType.addEventListener('change', updateCore);
+        coreDescriptor.addEventListener('input', updateCore);
+        
+        spokeModule.addEventListener('change', updateSpoke);
+        spokeDescriptor.addEventListener('input', updateSpoke);
+
+        updateCore();
+        updateSpoke();
+    }
+    
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.accordion-icon');
+            const isVisible = !content.classList.contains('hidden');
+
+            content.classList.toggle('hidden');
+            icon.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+    });
+
+    // Initial load
+    attachBuilderListeners();
+});
+</script>
+</body>
+</html>
